@@ -11,6 +11,7 @@ func main() {
 	http.HandleFunc("/", helloHandler)
 	http.HandleFunc("/benchmark", api.BenchmarkHandler)
 	http.HandleFunc("/results", api.ResultsHandler)
+	http.HandleFunc("/results/clear", api.ClearResultsHandler)
 
 	fmt.Println("Servidor rodando em http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

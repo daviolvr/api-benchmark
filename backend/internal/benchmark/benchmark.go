@@ -14,22 +14,32 @@ type Result struct {
 	Count      int     `json:"count"`
 }
 
-func RunBenchmark(url string) Result {
+func RunBenchmark(url string, headers map[string]string) Result {
 	start := time.Now()
 
-	resp, err := http.Get(url)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return Result{
-			Error: err.Error(),
-		}
+		return Result{Error: err.Error()}
+	}
+
+	// Adiciona headers se houver
+	for key, value := range headers {
+		req.Header.Set(key, value)
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	duration := time.Since(start).Seconds() * 1000 // ms
+
+	if err != nil {
+		return Result{Duration: duration, Error: err.Error()}
 	}
 	defer resp.Body.Close()
 
-	duration := time.Since(start)
-
 	return Result{
 		StatusCode: resp.StatusCode,
-		Duration:   float64(duration.Milliseconds()),
+		Duration:   duration,
+		Error:      "",
 	}
 }
 
@@ -52,4 +62,8 @@ func LoadResults() ([]StoredResult, error) {
 	}
 
 	return results, nil
+}
+
+func ClearResults() error {
+	return os.WriteFile("data/results.json", []byte("[]"), 0644)
 }

@@ -39,7 +39,7 @@ func BenchmarkHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Realiza múltiplas requisições
 	for i := 0; i < count; i++ {
-		result = benchmark.RunBenchmark(req.URL)
+		result = benchmark.RunBenchmark(req.URL, req.Headers)
 		totalDuration += result.Duration
 	}
 
@@ -81,4 +81,20 @@ func ResultsHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(results)
+}
+
+func ClearResultsHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
+	err := benchmark.ClearResults()
+	if err != nil {
+		http.Error(w, "Erro ao limpar resultados", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Resultados limpos com sucesso\n"))
 }
