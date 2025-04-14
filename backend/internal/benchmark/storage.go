@@ -22,14 +22,26 @@ func SaveResult(result StoredResult) error {
 
 	filePath := "data/results.json"
 
-	// Lê o conteudo atual
+	// Verifica se o arquivo existe
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		// Cria a pasta se não existir
+		os.MkdirAll("data", os.ModePerm)
+
+		// Cria o arquivo com um array vazio
+		err := os.WriteFile(filePath, []byte("[]"), 0644)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Lê o conteúdo atual
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return err
 	}
 
 	var results []StoredResult
-	json.Unmarshal(data, &results)
+	_ = json.Unmarshal(data, &results)
 
 	// Adiciona novo resultado
 	results = append(results, result)

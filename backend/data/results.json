@@ -1,8 +1,8 @@
 [
  {
   "url": "https://api.abuseipdb.com/api/v2/blacklist?confidenceMinimum=75\u0026limit=9999999",
-  "status_code": 401,
-  "duration_ms": 538,
+  "status_code": 200,
+  "duration_ms": 439.401777,
   "count": 1
  }
 ]
