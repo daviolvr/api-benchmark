@@ -60,3 +60,14 @@ func BenchmarkHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(result)
 }
+
+func ResultsHandler(w http.ResponseWriter, r *http.Request) {
+	results, err := benchmark.LoadResults()
+	if err != nil {
+		http.Error(w, "Erro ao carregar resultados", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(results)
+}

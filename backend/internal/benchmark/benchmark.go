@@ -1,7 +1,9 @@
 package benchmark
 
 import (
+	"encoding/json"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -29,4 +31,25 @@ func RunBenchmark(url string) Result {
 		StatusCode: resp.StatusCode,
 		Duration:   float64(duration.Milliseconds()),
 	}
+}
+
+func LoadResults() ([]StoredResult, error) {
+	var results []StoredResult
+
+	file, err := os.Open("data/results.json")
+	if err != nil {
+		// Caso o arquivo não exista, retorna uma lista vazia
+		if os.IsNotExist(err) {
+			return results, nil
+		}
+		return nil, err
+	}
+	defer file.Close()
+
+	err = json.NewDecoder(file).Decode(&results)
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }
