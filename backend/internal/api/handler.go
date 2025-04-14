@@ -68,6 +68,17 @@ func ResultsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	urlFilter := r.URL.Query().Get("url")
+	if urlFilter != "" {
+		var filtered []benchmark.StoredResult
+		for _, res := range results {
+			if res.URL == urlFilter {
+				filtered = append(filtered, res)
+			}
+		}
+		results = filtered
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(results)
 }
