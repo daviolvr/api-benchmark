@@ -7,7 +7,7 @@ This project performs benchmarks on public APIs, measuring response times, HTTP 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/api-benchmark.git
+git clone https://github.com/daviolvr/api-benchmark.git
 cd api-benchmark
 ```
 
